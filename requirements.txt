@@ -1,0 +1,4 @@
+numpy>=1.7.0
+# Our libraries
+srsly>=0.1.0,<1.1.0
+catalogue>=0.2.0,<1.1.0
