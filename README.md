@@ -39,7 +39,7 @@ train_data, dev_data = imdb_loader()
 | -------------------- | ----------------------------------------------------------- | :------: |
 | `imdb`               | IMDB sentiment dataset.                                     |    ✓     |
 | `mnist`              | MNIST data.                                                 |    ✓     |
-| `quora`              | Quora question answer dataset.                              |    ✓     |
+| `quora_questions`    | Quora question answer dataset.                              |    ✓     |
 | `reuters`            | Reuters dataset.                                            |    ✓     |
 | `snli`               | Stanford Natural Language Inference corpus.                 |    ✓     |
 | `stack_exchange`     | Stack Exchange dataset.                                     |          |
