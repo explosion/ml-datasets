@@ -46,3 +46,15 @@ train_data, dev_data = imdb_loader()
 | `ud_ancora_pos_tags` | Universal Dependencies Spanish AnCora corpus (POS tagging). |    ✓     |
 | `ud_ewtb_pos_tags`   | Universal Dependencies English EWT corpus (POS tagging).    |    ✓     |
 | `wikiner`            | WikiNER data.                                               |          |
+
+### Registering loaders
+
+Loaders can be registered externally using the `loaders` registry as a decorator. For example:
+
+```python
+@ml_datasets.loaders("my_custom_loader")
+def my_custom_loader():
+    return load_some_data()
+
+assert "my_custom_loader" in ml_datasets.loaders
+```
