@@ -1,8 +1,8 @@
 from pathlib import Path
 import random
 
+from .util import get_file
 from ._registry import register_loader
-from ._vendorized.keras_data_utils import get_file
 
 IMDB_URL = "http://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
 

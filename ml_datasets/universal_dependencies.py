@@ -2,8 +2,8 @@ import numpy
 from collections import Counter
 from pathlib import Path
 
+from .util import get_file
 from ._registry import register_loader
-from ._vendorized.keras_data_utils import get_file
 
 
 GITHUB = "https://github.com/UniversalDependencies/"

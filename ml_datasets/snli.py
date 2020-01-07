@@ -1,8 +1,9 @@
 from srsly import json_loads
 from pathlib import Path
 
+from .util import get_file
 from ._registry import register_loader
-from ._vendorized.keras_data_utils import get_file
+
 
 SNLI_URL = "http://nlp.stanford.edu/projects/snli/snli_1.0.zip"
 THREE_LABELS = {"entailment": 2, "contradiction": 1, "neutral": 0}

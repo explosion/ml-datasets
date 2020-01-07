@@ -2,8 +2,7 @@ import random
 import gzip
 from srsly import cloudpickle as pickle
 
-from .util import unzip, to_categorical
-from ._vendorized.keras_data_utils import get_file
+from .util import unzip, to_categorical, get_file
 from ._registry import register_loader
 
 
