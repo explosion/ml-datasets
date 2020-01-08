@@ -27,7 +27,6 @@ def get_file(fname, origin, untar=False, unzip=False, cache_subdir="datasets"):
             fpath = untar_fpath + ".tar.gz"
     else:
         fpath = os.path.join(datadir, fname)
-    print("Downloading data from", origin)
     global progbar
     progbar = None
 
@@ -39,18 +38,19 @@ def get_file(fname, origin, untar=False, unzip=False, cache_subdir="datasets"):
             progbar.update(block_size)
 
     error_msg = "URL fetch failure on {}: {} -- {}"
-    try:
+    if not os.path.exists(fpath):
         try:
-            urlretrieve(origin, fpath, dl_progress)
-        except URLError as e:
-            raise Exception(error_msg.format(origin, e.errno, e.reason))
-        except HTTPError as e:
-            raise Exception(error_msg.format(origin, e.code, e.msg))
-    except (Exception, KeyboardInterrupt):
-        if os.path.exists(fpath):
-            os.remove(fpath)
-        raise
-    progbar = None
+            try:
+                urlretrieve(origin, fpath, dl_progress)
+            except URLError as e:
+                raise Exception(error_msg.format(origin, e.errno, e.reason))
+            except HTTPError as e:
+                raise Exception(error_msg.format(origin, e.code, e.msg))
+        except (Exception, KeyboardInterrupt):
+            if os.path.exists(fpath):
+                os.remove(fpath)
+            raise
+        progbar = None
 
     if untar:
         if not os.path.exists(untar_fpath):
