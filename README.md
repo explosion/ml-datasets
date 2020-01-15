@@ -5,7 +5,6 @@
 Loaders for various machine learning datasets for testing and example scripts.
 Previously in `thinc.extra.datasets`.
 
-[![Current Release Version](https://img.shields.io/github/release/explosion/ml_datasets.svg?style=flat-square&logo=github)](https://github.com/explosion/ml_datasets/releases)
 [![PyPi Version](https://img.shields.io/pypi/v/ml-datasets.svg?style=flat-square&logo=pypi&logoColor=white)](https://pypi.python.org/pypi/ml-datasets)
 
 ## Setup and installation
