@@ -34,17 +34,18 @@ train_data, dev_data = imdb_loader()
 
 ### Available loaders
 
-| ID / Function        | Description                                                 | From URL |
-| -------------------- | ----------------------------------------------------------- | :------: |
-| `imdb`               | IMDB sentiment dataset.                                     |    ✓     |
-| `mnist`              | MNIST data.                                                 |    ✓     |
-| `quora_questions`    | Quora question answer dataset.                              |    ✓     |
-| `reuters`            | Reuters dataset.                                            |    ✓     |
-| `snli`               | Stanford Natural Language Inference corpus.                 |    ✓     |
-| `stack_exchange`     | Stack Exchange dataset.                                     |          |
-| `ud_ancora_pos_tags` | Universal Dependencies Spanish AnCora corpus (POS tagging). |    ✓     |
-| `ud_ewtb_pos_tags`   | Universal Dependencies English EWT corpus (POS tagging).    |    ✓     |
-| `wikiner`            | WikiNER data.                                               |          |
+| ID / Function        | Description                                                              | From URL |
+| -------------------- | ------------------------------------------------------------------------ | :------: |
+| `imdb`               | IMDB sentiment dataset.                                                  |    ✓     |
+| `mnist`              | MNIST data.                                                              |    ✓     |
+| `quora_questions`    | Quora question answer dataset.                                           |    ✓     |
+| `reuters`            | Reuters dataset.                                                         |    ✓     |
+| `snli`               | Stanford Natural Language Inference corpus.                              |    ✓     |
+| `stack_exchange`     | Stack Exchange dataset.                                                  |          |
+| `ud_ancora_pos_tags` | Universal Dependencies Spanish AnCora corpus (POS tagging).              |    ✓     |
+| `ud_ewtb_pos_tags`   | Universal Dependencies English EWT corpus (POS tagging).                 |    ✓     |
+| `wikiner`            | WikiNER data.                                                            |          |
+| `dbpedia`            | DBPedia ontology dataset via [fast.ai](https://course.fast.ai/datasets). |    ✓     |
 
 ### Registering loaders
 
