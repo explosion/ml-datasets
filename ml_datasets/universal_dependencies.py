@@ -66,6 +66,8 @@ def ud_pos_tags(train_loc, dev_loc, encode_tags=True, encode_words=True, limit=N
     train_X, train_y = zip(*train_data)
     dev_X, dev_y = zip(*check_data)
     nb_tag = max(max(y) for y in train_y) + 1
+    train_X = list(train_X)
+    dev_X = list(dev_X)
     train_y = [to_categorical(y, nb_tag) for y in train_y]
     dev_y = [to_categorical(y, nb_tag) for y in dev_y]
     if limit is not None:
