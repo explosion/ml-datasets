@@ -63,8 +63,8 @@ Each instance contains the text of a movie review, and a sentiment expressed as 
 ```python
 train_data, dev_data = ml_datasets.imdb()
 for text, annot in train_data[0:5]:
-    print(text)
-    print(annot)
+    print(f"Review: {text}")
+    print(f"Sentiment: {annot}")
 ```
 
 - Download URL: [http://ai.stanford.edu/~amaas/data/sentiment/](http://ai.stanford.edu/~amaas/data/sentiment/)
@@ -79,14 +79,14 @@ for text, annot in train_data[0:5]:
 
 #### DBPedia
 
+Each instance contains an ontological description, and a classification into one of the 14 distinct labels.
+
 ```python
 train_data, dev_data = ml_datasets.dbpedia()
 for text, annot in train_data[0:5]:
-    print(text)
-    print(annot)
+    print(f"Text: {text}")
+    print(f"Category: {annot}")
 ```
-
-Each instance contains an ontological description, and a classification into one of the 14 distinct labels.
 
 - Download URL: [Via fast.ai](https://course.fast.ai/datasets)
 - Original citation: [Xiang Zhang et al., 2015](https://arxiv.org/abs/1509.01626)
@@ -98,18 +98,39 @@ Each instance contains an ontological description, and a classification into one
 | Labels per instance | Single   | Single   |
 | Label distribution  | Balanced | Balanced |
 
+#### CMU
+
+Each instance contains a movie description, and a classification into a list of appropriate genres.
+
+```python
+train_data, dev_data = ml_datasets.cmu()
+for text, annot in train_data[0:5]:
+    print(f"Text: {text}")
+    print(f"Genres: {annot}")
+```
+
+- Download URL: [http://www.cs.cmu.edu/~ark/personas/](http://www.cs.cmu.edu/~ark/personas/)
+- Original citation: [David Bamman et al., 2013](https://www.aclweb.org/anthology/P13-1035/)
+
+| Property            | Training                                                                                           | Dev |
+| ------------------- | -------------------------------------------------------------------------------------------------- | --- |
+| # Instances         | 41793                                                                                                   |0   |
+| Label values        | 363 different genres                                                                              | -   |
+| Labels per instance | Multiple                                                                                           | -   |
+| Label distribution  | Imbalanced: 147 labels with less than 20 examples, while `Drama` occurs more than 19000 times | -   |
+
 #### Quora
 
 ```python
 train_data, dev_data = ml_datasets.quora_questions()
 for questions, annot in train_data[0:50]:
     q1, q2 = questions
-    print(q1)
-    print(q2)
-    print(annot)
+    print(f"Question 1: {q1}")
+    print(f"Question 2: {q2}")
+    print(f"Similarity: {annot}")
 ```
 
-Each instance contains two quora questions, and a label indicating whether or not they are duplicates (`0`: no, `1`:yes).
+Each instance contains two quora questions, and a label indicating whether or not they are duplicates (`0`: no, `1`: yes).
 The ground-truth labels contain some amount of noise: they are not guaranteed to be perfect.
 
 - Download URL: [http://qim.fs.quoracdn.net/quora_duplicate_questions.tsv](http://qim.fs.quoracdn.net/quora_duplicate_questions.tsv)
