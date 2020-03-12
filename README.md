@@ -39,7 +39,8 @@ train_data, dev_data = imdb_loader()
 | ID / Function        | Description                                  | NLP task                                  | From URL |
 | -------------------- | -------------------------------------------- | ----------------------------------------- | :------: |
 | `imdb`               | IMDB sentiment dataset                       | Binary classification: sentiment analysis |    ✓     |
-| `dbpedia`            | DBPedia ontology dataset                     | Multi-label (exclusive) classification    |    ✓     |
+| `dbpedia`            | DBPedia ontology dataset                     | Multi-class single-label classification   |    ✓     |
+| `cmu`                | CMU movie genres dataset                     | Multi-class, multi-label classification   |    ✓     |
 | `quora_questions`    | Duplicate Quora questions dataset            | Detecting duplicate questions             |    ✓     |
 | `reuters`            | Reuters dataset (texts not included)         | Multi-class multi-label classification    |    ✓     |
 | `snli`               | Stanford Natural Language Inference corpus   | Recognizing textual entailment            |    ✓     |
@@ -112,11 +113,11 @@ for text, annot in train_data[0:5]:
 - Download URL: [http://www.cs.cmu.edu/~ark/personas/](http://www.cs.cmu.edu/~ark/personas/)
 - Original citation: [David Bamman et al., 2013](https://www.aclweb.org/anthology/P13-1035/)
 
-| Property            | Training                                                                                           | Dev |
-| ------------------- | -------------------------------------------------------------------------------------------------- | --- |
-| # Instances         | 41793                                                                                                   |0   |
-| Label values        | 363 different genres                                                                              | -   |
-| Labels per instance | Multiple                                                                                           | -   |
+| Property            | Training                                                                                      | Dev |
+| ------------------- | --------------------------------------------------------------------------------------------- | --- |
+| # Instances         | 41793                                                                                         | 0   |
+| Label values        | 363 different genres                                                                          | -   |
+| Labels per instance | Multiple                                                                                      | -   |
 | Label distribution  | Imbalanced: 147 labels with less than 20 examples, while `Drama` occurs more than 19000 times | -   |
 
 #### Quora
