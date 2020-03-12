@@ -41,12 +41,12 @@ train_data, dev_data = imdb_loader()
 | `imdb`               | IMDB sentiment dataset                       | Binary classification: sentiment analysis |    ✓     |
 | `dbpedia`            | DBPedia ontology dataset                     | Multi-label (exclusive) classification    |    ✓     |
 | `quora_questions`    | Duplicate Quora questions dataset            | Detecting duplicate questions             |    ✓     |
-| `reuters`            | Reuters dataset                              |                                           |    ✓     |
-| `snli`               | Stanford Natural Language Inference corpus   |                                           |    ✓     |
-| `stack_exchange`     | Stack Exchange dataset                       |                                           |          |
+| `reuters`            | Reuters dataset (texts not included)         | Multi-class multi-label classification    |    ✓     |
+| `snli`               | Stanford Natural Language Inference corpus   | Recognizing textual entailment            |    ✓     |
+| `stack_exchange`     | Stack Exchange dataset                       | Question Answering                        |          |
 | `ud_ancora_pos_tags` | Universal Dependencies Spanish AnCora corpus | POS tagging                               |    ✓     |
 | `ud_ewtb_pos_tags`   | Universal Dependencies English EWT corpus    | POS tagging                               |    ✓     |
-| `wikiner`            | WikiNER data                                 |                                           |          |
+| `wikiner`            | WikiNER data                                 | Named entity recognition                  |          |
 
 #### Other ML datasets
 
@@ -62,6 +62,9 @@ Each instance contains the text of a movie review, and a sentiment expressed as 
 
 ```python
 train_data, dev_data = ml_datasets.imdb()
+for text, annot in train_data[0:5]:
+    print(text)
+    print(annot)
 ```
 
 - Download URL: [http://ai.stanford.edu/~amaas/data/sentiment/](http://ai.stanford.edu/~amaas/data/sentiment/)
@@ -78,6 +81,9 @@ train_data, dev_data = ml_datasets.imdb()
 
 ```python
 train_data, dev_data = ml_datasets.dbpedia()
+for text, annot in train_data[0:5]:
+    print(text)
+    print(annot)
 ```
 
 Each instance contains an ontological description, and a classification into one of the 14 distinct labels.
@@ -96,6 +102,11 @@ Each instance contains an ontological description, and a classification into one
 
 ```python
 train_data, dev_data = ml_datasets.quora_questions()
+for questions, annot in train_data[0:50]:
+    q1, q2 = questions
+    print(q1)
+    print(q2)
+    print(annot)
 ```
 
 Each instance contains two quora questions, and a label indicating whether or not they are duplicates (`0`: no, `1`:yes).
