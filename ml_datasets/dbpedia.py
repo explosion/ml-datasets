@@ -24,7 +24,7 @@ def dbpedia(loc=None, limit=0, shuffle=True):
 
 def read_dbpedia_ontology(data_file, limit=0, shuffle=True):
     examples = []
-    with open(data_file, newline="") as f:
+    with open(data_file, newline="", encoding='utf-8') as f:
         reader = csv.reader(f)
         for row in reader:
             label = row[0]
