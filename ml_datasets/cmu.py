@@ -10,19 +10,19 @@ CMU_URL = "http://www.cs.cmu.edu/~ark/personas/data/MovieSummaries.tar.gz"
 
 
 @register_loader("cmu")
-def cmu(loc=None, limit=0, train=True, freq_cutoff=1000, nlp=None):
+def cmu(loc=None, limit=0, train=True, freq_cutoff=1000):
     if loc is None:
         loc = get_file("MovieSummaries", CMU_URL, untar=True, unzip=True)
     meta_loc = Path(loc) / "movie.metadata.tsv"
     text_loc = Path(loc) / "plot_summaries.txt"
-    return read_cmu(meta_loc, text_loc, nlp, limit=limit, train=train, freq_cutoff=freq_cutoff)
+    return read_cmu(meta_loc, text_loc, limit=limit, train=train, freq_cutoff=freq_cutoff)
 
 
-def read_cmu(meta_loc, text_loc, nlp, limit, train, freq_cutoff, shuffle=True):
-    examples = []
+def read_cmu(meta_loc, text_loc, limit, train, freq_cutoff, shuffle=True):
     genre_by_id = {}
     title_by_id = {}
     unique_genres = {}
+    examples = []
     with meta_loc.open("r", encoding="utf8") as file_:
         for row in csv.reader(file_, delimiter="\t"):
             movie_id = row[0]
