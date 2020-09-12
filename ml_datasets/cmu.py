@@ -1,24 +1,12 @@
-from typing import Callable, Iterable
-from functools import partial
 import json
 from pathlib import Path
 import random
 import csv
-import spacy
-from spacy import Language
-from spacy.training import Example
 
 from .util import get_file
 from ._registry import register_loader
 
 CMU_URL = "http://www.cs.cmu.edu/~ark/personas/data/MovieSummaries.tar.gz"
-
-
-@spacy.registry.readers("ml_datasets.cmu_movies.v1")
-def cmu_reader(
-    path: Path, train: bool, freq_cutoff: int = 1000, limit: int = 0,
-) -> Callable[["Language"], Iterable[Example]]:
-    return partial(cmu, path, limit, train, freq_cutoff)
 
 
 @register_loader("cmu")
@@ -59,9 +47,8 @@ def read_cmu(meta_loc, text_loc, nlp, limit, train, freq_cutoff, shuffle=True):
             # only use examples with True cases in the final labels that made the frequency cut
             if genres and [l for l in genres if l in final_labels]:
                 if train != str(movie_id).endswith("3"):
-                    doc = nlp.make_doc(title + "\n" + text)
                     cat_dict = {label: label in genres for label in final_labels}
-                    examples.append(Example.from_dict(doc, {"cats": cat_dict}))
+                    examples.append((title + "\n" + text, cat_dict))
     if shuffle:
         random.shuffle(examples)
     if limit >= 1:

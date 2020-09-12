@@ -17,7 +17,7 @@ pip install ml-datasets
 
 ## Loaders
 
-Loaders can be imported directly or used via their string name (which is useful if they're set via command line arguments). Some loaders may take arguments – see the source of details.
+Loaders can be imported directly or used via their string name (which is useful if they're set via command line arguments). Some loaders may take arguments – see the source for details.
 
 ```python
 # Import directly
