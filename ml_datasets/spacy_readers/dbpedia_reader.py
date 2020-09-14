@@ -16,7 +16,12 @@ def dbpedia_reader(
         assert isinstance(gold_label, str)
         unique_labels.add(gold_label)
     # do this here to avoid reading the data multiple times
-    data = list(dbpedia(train, path, limit=limit))
+    if train:
+        data = all_train_data
+        if limit >= 1:
+            data = data[:limit]
+    else:
+        data = list(dbpedia(train, path, limit=limit))
 
     def read_examples(nlp):
         for text, gold_label in data:
