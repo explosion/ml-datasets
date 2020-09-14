@@ -2,8 +2,8 @@ from pathlib import Path
 import csv
 import random
 
-from .util import get_file
-from ._registry import register_loader
+from ..util import get_file
+from .._registry import register_loader
 
 
 # DBPedia Ontology from https://course.fast.ai/datasets

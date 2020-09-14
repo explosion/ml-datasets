@@ -1,8 +1,8 @@
 from pathlib import Path
 import csv
 
-from .util import partition, get_file
-from ._registry import register_loader
+from ..util import partition, get_file
+from .._registry import register_loader
 
 
 QUORA_QUESTIONS_URL = "http://qim.fs.quoracdn.net/quora_duplicate_questions.tsv"

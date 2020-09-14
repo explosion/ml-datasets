@@ -3,8 +3,8 @@ from pathlib import Path
 import random
 import csv
 
-from .util import get_file
-from ._registry import register_loader
+from ..util import get_file
+from .._registry import register_loader
 
 CMU_URL = "http://www.cs.cmu.edu/~ark/personas/data/MovieSummaries.tar.gz"
 

@@ -1,4 +1,4 @@
-from ._registry import register_loader
+from .._registry import register_loader
 
 
 @register_loader("wikiner")

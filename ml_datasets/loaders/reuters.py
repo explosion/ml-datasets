@@ -1,8 +1,8 @@
 from srsly import cloudpickle as pickle
 import numpy
 
-from .util import get_file
-from ._registry import register_loader
+from ..util import get_file
+from .._registry import register_loader
 
 
 URL = "https://s3.amazonaws.com/text-datasets/reuters_word_index.pkl"

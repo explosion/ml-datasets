@@ -1,8 +1,8 @@
 from pathlib import Path
 import random
 
-from .util import get_file
-from ._registry import register_loader
+from ..util import get_file
+from .._registry import register_loader
 
 IMDB_URL = "http://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
 
