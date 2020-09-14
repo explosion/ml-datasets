@@ -22,7 +22,6 @@ def read_cmu(train, meta_loc, text_loc, *, limit, shuffle):
     """Movies with an ID ending on 3, are considered to be test articles"""
     genre_by_id = {}
     title_by_id = {}
-    examples = []
     with meta_loc.open("r", encoding="utf8") as file_:
         for row in csv.reader(file_, delimiter="\t"):
             movie_id = row[0]
@@ -33,13 +32,13 @@ def read_cmu(train, meta_loc, text_loc, *, limit, shuffle):
             genre_by_id[movie_id] = genres
             title_by_id[movie_id] = title
 
+    examples = []
     with text_loc.open("r", encoding="utf8") as file_:
         for row in csv.reader(file_, delimiter="\t"):
             movie_id = row[0]
             text = row[1]
             genres = genre_by_id.get(movie_id, None)
             title = title_by_id.get(movie_id, "")
-            # only use examples with True cases in the final labels that made the frequency cut
             if genres:
                 if train != str(movie_id).endswith("3"):
                     examples.append((title + "\n" + text, list(genres)))
