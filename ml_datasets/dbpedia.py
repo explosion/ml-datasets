@@ -11,18 +11,16 @@ DBPEDIA_ONTOLOGY_URL = "https://s3.amazonaws.com/fast-ai-nlp/dbpedia_csv.tgz"
 
 
 @register_loader("dbpedia")
-def dbpedia(loc=None, limit=0, shuffle=True):
+def dbpedia(train=True, loc=None, *, limit=0, shuffle=True):
     if loc is None:
         loc = get_file("dbpedia_csv", DBPEDIA_ONTOLOGY_URL, untar=True, unzip=True)
-    train_loc = Path(loc) / "train.csv"
-    test_loc = Path(loc) / "test.csv"
-    return (
-        read_dbpedia_ontology(train_loc, limit=limit, shuffle=shuffle),
-        read_dbpedia_ontology(test_loc, limit=limit, shuffle=shuffle),
-    )
+    data_loc = Path(loc) / "test.csv"
+    if train:
+        data_loc = Path(loc) / "train.csv"
+    return read_dbpedia_ontology(data_loc, limit=limit, shuffle=shuffle)
 
 
-def read_dbpedia_ontology(data_file, limit=0, shuffle=True):
+def read_dbpedia_ontology(data_file, *, limit=0, shuffle=True):
     examples = []
     with open(data_file, newline="", encoding='utf-8') as f:
         reader = csv.reader(f)

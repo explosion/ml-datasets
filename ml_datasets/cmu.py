@@ -10,18 +10,18 @@ CMU_URL = "http://www.cs.cmu.edu/~ark/personas/data/MovieSummaries.tar.gz"
 
 
 @register_loader("cmu")
-def cmu(loc=None, limit=0, train=True, freq_cutoff=1000):
+def cmu(train=True, loc=None, *, limit=0, shuffle=True):
     if loc is None:
         loc = get_file("MovieSummaries", CMU_URL, untar=True, unzip=True)
     meta_loc = Path(loc) / "movie.metadata.tsv"
     text_loc = Path(loc) / "plot_summaries.txt"
-    return read_cmu(meta_loc, text_loc, limit=limit, train=train, freq_cutoff=freq_cutoff)
+    return read_cmu(train, meta_loc, text_loc, limit=limit, shuffle=shuffle)
 
 
-def read_cmu(meta_loc, text_loc, limit, train, freq_cutoff, shuffle=True):
+def read_cmu(train, meta_loc, text_loc, *, limit, shuffle):
+    """Movies with an ID ending on 3, are considered to be test articles"""
     genre_by_id = {}
     title_by_id = {}
-    unique_genres = {}
     examples = []
     with meta_loc.open("r", encoding="utf8") as file_:
         for row in csv.reader(file_, delimiter="\t"):
@@ -30,13 +30,8 @@ def read_cmu(meta_loc, text_loc, limit, train, freq_cutoff, shuffle=True):
             annot = row[8]
             d = json.loads(annot)
             genres = set(d.values())
-            for g in genres:
-                unique_genres[g] = unique_genres.get(g, 0) + 1
             genre_by_id[movie_id] = genres
             title_by_id[movie_id] = title
-
-    # filter labels by frequency
-    final_labels = [l for l in sorted(unique_genres.keys()) if unique_genres[l] >= freq_cutoff]
 
     with text_loc.open("r", encoding="utf8") as file_:
         for row in csv.reader(file_, delimiter="\t"):
@@ -45,10 +40,9 @@ def read_cmu(meta_loc, text_loc, limit, train, freq_cutoff, shuffle=True):
             genres = genre_by_id.get(movie_id, None)
             title = title_by_id.get(movie_id, "")
             # only use examples with True cases in the final labels that made the frequency cut
-            if genres and [l for l in genres if l in final_labels]:
+            if genres:
                 if train != str(movie_id).endswith("3"):
-                    cat_dict = {label: label in genres for label in final_labels}
-                    examples.append((title + "\n" + text, cat_dict))
+                    examples.append((title + "\n" + text, list(genres)))
     if shuffle:
         random.shuffle(examples)
     if limit >= 1:
