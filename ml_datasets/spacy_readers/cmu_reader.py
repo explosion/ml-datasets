@@ -18,12 +18,7 @@ def cmu_reader(
     # filter labels by frequency
     unique_labels = [l for l in sorted(counted_cats.keys()) if counted_cats[l] >= freq_cutoff]
     # do this here to avoid reading the data multiple times
-    if train:
-        data = all_train_data
-        if limit >= 1:
-            data = data[:limit]
-    else:
-        data = list(cmu(train, path, limit=limit, shuffle=False))
+    data = list(cmu(train, path, limit=limit, shuffle=False, labels=unique_labels))
 
     def read_examples(nlp):
         for text, cats in data:
