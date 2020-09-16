@@ -22,7 +22,6 @@ def cmu(loc=None, *, limit=0, shuffle=True, labels=None, split=0.9):
 
 
 def read_cmu(meta_loc, text_loc, *, limit, shuffle, labels):
-    """Movies with an ID ending on 3, are considered to be test articles"""
     genre_by_id = {}
     title_by_id = {}
     with meta_loc.open("r", encoding="utf8") as file_:
