@@ -8,13 +8,12 @@ IMDB_URL = "http://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
 
 
 @register_loader("imdb")
-def imdb(train=True, loc=None, *, limit=0):
+def imdb(loc=None, *, limit=0):
     if loc is None:
         loc = get_file("aclImdb", IMDB_URL, untar=True, unzip=True)
-    data_loc = Path(loc) / "test"
-    if train:
-        data_loc = Path(loc) / "train"
-    return read_imdb(data_loc, limit=limit)
+    train_loc = Path(loc) / "train"
+    test_loc = Path(loc) / "test"
+    return read_imdb(train_loc, limit=limit), read_imdb(test_loc, limit=limit)
 
 
 def read_imdb(data_dir, *, limit=0):

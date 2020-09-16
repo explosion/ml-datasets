@@ -22,16 +22,14 @@ Loaders can be imported directly or used via their string name (which is useful 
 ```python
 # Import directly
 from ml_datasets import imdb
-train_data = imdb(train=True)
-dev_data = imdb(train=False)
+train_data, dev_data = imdb()
 ```
 
 ```python
 # Load via registry
 from ml_datasets import loaders
 imdb_loader = loaders.get("imdb")
-train_data = imdb_loader(train=True)
-dev_data = imdb_loader(train=False)
+train_data, dev_data = imdb_loader()
 ```
 
 ### Available loaders
@@ -64,7 +62,7 @@ dev_data = imdb_loader(train=False)
 Each instance contains the text of a movie review, and a sentiment expressed as `0` or `1`.
 
 ```python
-train_data = ml_datasets.imdb(train=True)
+train_data, dev_data = ml_datasets.imdb()
 for text, annot in train_data[0:5]:
     print(f"Review: {text}")
     print(f"Sentiment: {annot}")
@@ -85,7 +83,7 @@ for text, annot in train_data[0:5]:
 Each instance contains an ontological description, and a classification into one of the 14 distinct labels.
 
 ```python
-train_data = ml_datasets.dbpedia(train=True)
+train_data, dev_data = ml_datasets.dbpedia()
 for text, annot in train_data[0:5]:
     print(f"Text: {text}")
     print(f"Category: {annot}")
@@ -106,7 +104,7 @@ for text, annot in train_data[0:5]:
 Each instance contains a movie description, and a classification into a list of appropriate genres.
 
 ```python
-train_data = ml_datasets.cmu(train=True)
+train_data, dev_data = ml_datasets.cmu()
 for text, annot in train_data[0:5]:
     print(f"Text: {text}")
     print(f"Genres: {annot}")
@@ -125,7 +123,7 @@ for text, annot in train_data[0:5]:
 #### Quora
 
 ```python
-train_data = ml_datasets.quora_questions(train=True)
+train_data, dev_data = ml_datasets.quora_questions()
 for questions, annot in train_data[0:50]:
     q1, q2 = questions
     print(f"Question 1: {q1}")

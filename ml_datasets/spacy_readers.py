@@ -1,16 +1,17 @@
-from typing import Iterable, Callable
+from functools import partial
+from typing import Iterable, Callable, Dict
 from pathlib import Path
 
 from .loaders import cmu, dbpedia, imdb
 
 
 def cmu_reader(
-    train: bool, path: Path = None, *, freq_cutoff: int = 0, limit: int = 0
-) -> Callable[["Language"], Iterable["Example"]]:
+    path: Path = None, *, freq_cutoff: int = 0, limit: int = 0
+) -> Dict[str, Callable[["Language"], Iterable["Example"]]]:
     from spacy.training.example import Example
 
     # Deduce the categories above threshold by inspecting all training data
-    all_train_data = list(cmu(train=True, loc=path, limit=0))
+    all_train_data, _ = list(cmu(path, limit=0))
     counted_cats = {}
     for text, cats in all_train_data:
         for cat in cats:
@@ -19,59 +20,60 @@ def cmu_reader(
     unique_labels = [
         l for l in sorted(counted_cats.keys()) if counted_cats[l] >= freq_cutoff
     ]
-    # do this here to avoid reading the data multiple times
-    data = list(cmu(train, path, limit=limit, shuffle=False, labels=unique_labels))
+    train_data, dev_data = cmu(path, limit=limit, shuffle=False, labels=unique_labels)
 
-    def read_examples(nlp):
+    def read_examples(data, nlp):
         for text, cats in data:
             doc = nlp.make_doc(text)
             assert isinstance(cats, list)
             cat_dict = {label: float(label in cats) for label in unique_labels}
             yield Example.from_dict(doc, {"cats": cat_dict})
 
-    return read_examples
+    return {
+        "train": partial(read_examples, train_data),
+        "dev": partial(read_examples, dev_data),
+    }
 
 
 def dbpedia_reader(
-    train: bool, path: Path = None, *, limit: int = 0
-) -> Callable[["Language"], Iterable["Example"]]:
+    path: Path = None, *, limit: int = 0
+) -> Dict[str, Callable[["Language"], Iterable["Example"]]]:
     from spacy.training.example import Example
 
-    all_train_data = dbpedia(train=True, loc=path, limit=0)
+    all_train_data, _ = dbpedia(path, limit=0)
     unique_labels = set()
     for text, gold_label in all_train_data:
         assert isinstance(gold_label, str)
         unique_labels.add(gold_label)
-    # do this here to avoid reading the data multiple times
-    if train:
-        data = all_train_data
-        if limit >= 1:
-            data = data[:limit]
-    else:
-        data = list(dbpedia(train, path, limit=limit))
+    train_data, dev_data = dbpedia(path, limit=limit)
 
-    def read_examples(nlp):
+    def read_examples(data, nlp):
         for text, gold_label in data:
             doc = nlp.make_doc(text)
             cat_dict = {label: float(gold_label == label) for label in unique_labels}
             yield Example.from_dict(doc, {"cats": cat_dict})
 
-    return read_examples
+    return {
+        "train": partial(read_examples, train_data),
+        "dev": partial(read_examples, dev_data),
+    }
 
 
 def imdb_reader(
-    train: bool, path: Path = None, *, limit: int = 0
-) -> Callable[["Language"], Iterable["Example"]]:
+    path: Path = None, *, limit: int = 0
+) -> Dict[str, Callable[["Language"], Iterable["Example"]]]:
     from spacy.training.example import Example
 
-    # do this here to avoid reading the data multiple times
-    data = list(imdb(train, path, limit=limit))
+    train_data, dev_data = imdb(path, limit=limit)
     unique_labels = ["pos", "neg"]
 
-    def read_examples(nlp):
+    def read_examples(data, nlp):
         for text, gold_label in data:
             doc = nlp.make_doc(text)
             cat_dict = {label: float(gold_label == label) for label in unique_labels}
             yield Example.from_dict(doc, {"cats": cat_dict})
 
-    return read_examples
+    return {
+        "train": partial(read_examples, train_data),
+        "dev": partial(read_examples, dev_data),
+    }

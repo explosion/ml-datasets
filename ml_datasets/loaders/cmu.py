@@ -3,22 +3,25 @@ from pathlib import Path
 import random
 import csv
 
-from ..util import get_file
+from ..util import get_file, partition
 from .._registry import register_loader
 
 CMU_URL = "http://www.cs.cmu.edu/~ark/personas/data/MovieSummaries.tar.gz"
 
 
 @register_loader("cmu")
-def cmu(train=True, loc=None, *, limit=0, shuffle=True, labels=None):
+def cmu(loc=None, *, limit=0, shuffle=True, labels=None, split=0.9):
     if loc is None:
         loc = get_file("MovieSummaries", CMU_URL, untar=True, unzip=True)
     meta_loc = Path(loc) / "movie.metadata.tsv"
     text_loc = Path(loc) / "plot_summaries.txt"
-    return read_cmu(train, meta_loc, text_loc, limit=limit, shuffle=shuffle, labels=labels)
+
+    data = read_cmu(meta_loc, text_loc, limit=limit, shuffle=shuffle, labels=labels)
+    train, dev = partition(data, split)
+    return train, dev
 
 
-def read_cmu(train, meta_loc, text_loc, *, limit, shuffle, labels):
+def read_cmu(meta_loc, text_loc, *, limit, shuffle, labels):
     """Movies with an ID ending on 3, are considered to be test articles"""
     genre_by_id = {}
     title_by_id = {}
@@ -41,8 +44,7 @@ def read_cmu(train, meta_loc, text_loc, *, limit, shuffle, labels):
             title = title_by_id.get(movie_id, "")
             if genres:
                 if not labels or [g for g in genres if g in labels]:
-                    if train != str(movie_id).endswith("3"):
-                        examples.append((title + "\n" + text, list(genres)))
+                    examples.append((title + "\n" + text, list(genres)))
     if shuffle:
         random.shuffle(examples)
     if limit >= 1:
