@@ -2,8 +2,8 @@ import numpy
 from collections import Counter
 from pathlib import Path
 
-from .util import get_file, to_categorical
-from ._registry import register_loader
+from ..util import get_file, to_categorical
+from .._registry import register_loader
 
 
 GITHUB = "https://github.com/UniversalDependencies/"
