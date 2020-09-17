@@ -2,8 +2,8 @@ import random
 import gzip
 from srsly import cloudpickle as pickle
 
-from .util import unzip, to_categorical, get_file
-from ._registry import register_loader
+from ..util import unzip, to_categorical, get_file
+from .._registry import register_loader
 
 
 URL = "https://s3.amazonaws.com/img-datasets/mnist.pkl.gz"

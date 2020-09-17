@@ -1,8 +1,8 @@
 from srsly import json_loads
 from pathlib import Path
 
-from .util import get_file
-from ._registry import register_loader
+from ..util import get_file
+from .._registry import register_loader
 
 
 SNLI_URL = "http://nlp.stanford.edu/projects/snli/snli_1.0.zip"

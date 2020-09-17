@@ -1,6 +1,6 @@
 from srsly import json_loads
 
-from .util import partition
+from ..util import partition
 
 
 def stack_exchange(loc=None):
