@@ -1,6 +1,6 @@
 <a href="https://explosion.ai"><img src="https://explosion.ai/assets/img/logo.svg" width="125" height="125" align="right" /></a>
 
-# Machine learning dataset loaders
+# Machine learning dataset loaders for testing and examples
 
 Loaders for various machine learning datasets for testing and example scripts.
 Previously in `thinc.extra.datasets`.
