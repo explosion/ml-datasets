@@ -63,7 +63,7 @@ def load_mnist(path="mnist.pkl.gz"):
 
 
 def load_fashion_mnist(
-    train_img_path="",
+    train_img_path="train-images-idx3-ubyte.gz",
     train_label_path="train-labels-idx1-ubyte.gz",
     test_img_path="t10k-images-idx3-ubyte.gz",
     test_label_path="t10k-labels-idz1-ubyte.gz",
@@ -78,14 +78,14 @@ def load_fashion_mnist(
     with gzip.open(train_img_path, "rb") as trimgpath:
         train_images = np.frombuffer(
             trimgpath.read(), dtype=np.uint8, offset=16
-        ).reshape(len(train_labels), 784)
+        ).reshape(len(train_labels), 28, 28)
     with gzip.open(test_label_path, "rb") as telbpath:
         test_labels = np.frombuffer(telbpath.read(), dtype=np.uint8, offset=8)
     with gzip.open(test_img_path, "rb") as teimgpath:
         test_images = np.frombuffer(
             teimgpath.read(), dtype=np.uint8, offset=16
-        ).reshape(len(test_labels), 784)
-    return train_images, train_labels, test_images, test_labels
+        ).reshape(len(test_labels), 28, 28)
+    return (train_images, train_labels), (test_images, test_labels)
 
 
 def load_kuzushiji_mnist(
@@ -98,8 +98,8 @@ def load_kuzushiji_mnist(
     train_label_path = get_file(train_label_path, origin=KU_TR_LBL_URL)
     test_img_path = get_file(test_img_path, origin=KU_TE_IMG_URL)
     test_label_path = get_file(test_label_path, origin=KU_TE_LBL_URL)
-    train_images = np.load(train_img_path)
-    train_labels = np.load(train_label_path)
-    test_images = np.load(test_img_path)
-    test_labels = np.load(test_label_path)
-    return train_images, train_labels, test_images, test_labels
+    train_images = np.load(train_img_path)['arr_0']
+    train_labels = np.load(train_label_path)['arr_0']
+    test_images = np.load(test_img_path)['arr_0']
+    test_labels = np.load(test_label_path)['arr_0']
+    return (train_images, train_labels), (test_images, test_labels)
