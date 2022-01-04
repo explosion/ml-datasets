@@ -61,7 +61,6 @@ def load_cifar10(path='cifar-10-python.tar.gz'):
     return train_images, train_labels, test_images, test_labels
 
 
-# TODO finish this function
 def load_cifar100(path='cifar-100-python.tar.gz', coarse=False):
     path = get_file(path, origin=CIFAR10_URL)
     with tarfile.open(path) as cifarf:
