@@ -40,8 +40,10 @@ def mnist(variant='mnist'):
     train_data = list(zip(X_train, y_train))
     nr_train = X_train.shape[0]
     random.shuffle(train_data)
+    # FIXME heldout data never returned?
     heldout_data = train_data[: int(nr_train * 0.1)]
     mnist_train = train_data[len(heldout_data) :]
+    # FIXME why zip and then unzip mnist_dev?
     mnist_dev = list(zip(X_test, y_test))
 
     train_X, train_Y = unzip(mnist_train)
