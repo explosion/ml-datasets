@@ -21,8 +21,7 @@ KU_TE_LBL_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-test-labels
 
 
 @register_loader("mnist")
-def mnist(variant='mnist'):
-    # the data, shuffled and split between train and test sets
+def mnist(variant='mnist', shuffle=True):
     if variant == 'mnist':
         (X_train, y_train), (X_test, y_test) = load_mnist()
     elif variant == 'fashion':
@@ -37,20 +36,13 @@ def mnist(variant='mnist'):
     X_test = X_test.astype("float32")
     X_train /= 255.0
     X_test /= 255.0
-    train_data = list(zip(X_train, y_train))
-    nr_train = X_train.shape[0]
-    random.shuffle(train_data)
-    # FIXME heldout data never returned?
-    heldout_data = train_data[: int(nr_train * 0.1)]
-    mnist_train = train_data[len(heldout_data) :]
-    # FIXME why zip and then unzip mnist_dev?
-    mnist_dev = list(zip(X_test, y_test))
-
-    train_X, train_Y = unzip(mnist_train)
-    train_Y = to_categorical(train_Y, n_classes=10)
-    dev_X, dev_Y = unzip(mnist_dev)
-    dev_Y = to_categorical(dev_Y, n_classes=10)
-    return (train_X, train_Y), (dev_X, dev_Y)
+    if shuffle:
+        train_data = list(zip(X_train, y_train))
+        random.shuffle(train_data)
+        X_train, y_train = unzip(train_data)
+    y_train = to_categorical(y_train, n_classes=10)
+    y_test = to_categorical(y_test, n_classes=10)
+    return (X_train, y_train), (X_test, y_test)
 
 
 def load_mnist(path="mnist.pkl.gz"):

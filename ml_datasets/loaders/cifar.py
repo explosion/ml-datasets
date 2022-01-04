@@ -9,7 +9,7 @@ CIFAR10_URL = "https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz"
 CIFAR100_URL = "https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz"
 
 
-def cifar(variant='10', channels_last=False, shuffle=False):
+def cifar(variant='10', channels_last=False, shuffle=True):
     if variant == '10':
         data = load_cifar10()
     elif variant == '100':
