@@ -13,11 +13,11 @@ def cifar(variant='10', channels_last=False, shuffle=True):
     if variant == '10':
         data = load_cifar10()
     elif variant == '100':
-        data = load_cifar100()
+        data = load_cifar100(coarse=False)
     elif variant == '100-coarse':
         data = load_cifar100(coarse=True)
     else:
-        raise ValueError("variant must be one of: '10', '100', 100-coarse")
+        raise ValueError("Variant must be one of: '10', '100', 100-coarse")
     X_train, y_train, X_test, y_test = data
     X_train = X_train.astype("float32")
     X_test = X_test.astype("float32")
@@ -57,7 +57,7 @@ def load_cifar10(path='cifar-10-python.tar.gz'):
                 test_labels = data[b'labels']
     train_images = numpy.vstack(train_images)
     train_labels = numpy.asarray(train_labels)
-    test_labels = numpy.asarray(train_labels)
+    test_labels = numpy.asarray(test_labels)
     return train_images, train_labels, test_images, test_labels
 
 

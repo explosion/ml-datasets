@@ -9,15 +9,15 @@ from .._registry import register_loader
 
 MNIST_URL = "https://s3.amazonaws.com/img-datasets/mnist.pkl.gz"
 
-FA_TR_IMG_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz"
-FA_TR_LBL_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz"
-FA_TE_IMG_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz"
-FA_TE_LBL_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz"
+FA_TRAIN_IMG_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz"
+FA_TRAIN_LBL_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz"
+FA_TEST_IMG_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-images-idx3-ubyte.gz"
+FA_TEST_LBL_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz"
 
-KU_TR_IMG_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-train-imgs.npz"
-KU_TR_LBL_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-train-labels.npz"
-KU_TE_IMG_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-test-imgs.npz"
-KU_TE_LBL_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-test-labels.npz"
+KU_TRAIN_IMG_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-train-imgs.npz"
+KU_TRAIN_LBL_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-train-labels.npz"
+KU_TEST_IMG_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-test-imgs.npz"
+KU_TEST_LBL_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-test-labels.npz"
 
 
 @register_loader("mnist")
@@ -29,7 +29,7 @@ def mnist(variant='mnist', shuffle=True):
     elif variant == 'kuzushiji':
         (X_train, y_train), (X_test, y_test) = load_kuzushiji_mnist()
     else:
-        raise ValueError("variant must be one of: 'mnist', 'fashion', 'kuzushiji'")
+        raise ValueError("Variant must be one of: 'mnist', 'fashion', 'kuzushiji'")
     X_train = X_train.reshape(60000, 784)
     X_test = X_test.reshape(10000, 784)
     X_train = X_train.astype("float32")
@@ -62,10 +62,10 @@ def load_fashion_mnist(
     test_img_path="t10k-images-idx3-ubyte.gz",
     test_label_path="t10k-labels-idz1-ubyte.gz",
 ):
-    train_img_path = get_file(train_img_path, origin=FA_TR_IMG_URL)
-    train_label_path = get_file(train_label_path, origin=FA_TR_LBL_URL)
-    test_img_path = get_file(test_img_path, origin=FA_TE_IMG_URL)
-    test_label_path = get_file(test_label_path, origin=FA_TE_LBL_URL)
+    train_img_path = get_file(train_img_path, origin=FA_TRAIN_IMG_URL)
+    train_label_path = get_file(train_label_path, origin=FA_TRAIN_LBL_URL)
+    test_img_path = get_file(test_img_path, origin=FA_TEST_IMG_URL)
+    test_label_path = get_file(test_label_path, origin=FA_TEST_LBL_URL)
     # Based on https://github.com/zalandoresearch/fashion-mnist/blob/master/utils/mnist_reader.py
     with gzip.open(train_label_path, "rb") as trlbpath:
         train_labels = np.frombuffer(trlbpath.read(), dtype=np.uint8, offset=8)
@@ -88,10 +88,10 @@ def load_kuzushiji_mnist(
     test_img_path="kmnist-test-imgs.npz",
     test_label_path="kmnist-test-labels.npz",
 ):
-    train_img_path = get_file(train_img_path, origin=KU_TR_IMG_URL)
-    train_label_path = get_file(train_label_path, origin=KU_TR_LBL_URL)
-    test_img_path = get_file(test_img_path, origin=KU_TE_IMG_URL)
-    test_label_path = get_file(test_label_path, origin=KU_TE_LBL_URL)
+    train_img_path = get_file(train_img_path, origin=KU_TRAIN_IMG_URL)
+    train_label_path = get_file(train_label_path, origin=KU_TRAIN_LBL_URL)
+    test_img_path = get_file(test_img_path, origin=KU_TEST_IMG_URL)
+    test_label_path = get_file(test_label_path, origin=KU_TEST_LBL_URL)
     train_images = np.load(train_img_path)['arr_0']
     train_labels = np.load(train_label_path)['arr_0']
     test_images = np.load(test_img_path)['arr_0']
