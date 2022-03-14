@@ -1,6 +1,8 @@
 import random
+import zipfile
 import gzip
 import numpy as np
+from scipy.io import loadmat
 from srsly import cloudpickle as pickle
 
 from ..util import unzip, to_categorical, get_file
@@ -8,6 +10,7 @@ from .._registry import register_loader
 
 
 MNIST_URL = "https://s3.amazonaws.com/img-datasets/mnist.pkl.gz"
+EMNIST_URL = "http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/matlab.zip"
 
 FA_TRAIN_IMG_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz"
 FA_TRAIN_LBL_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz"
@@ -28,10 +31,34 @@ def mnist(variant='mnist', shuffle=True):
         (X_train, y_train), (X_test, y_test) = load_fashion_mnist()
     elif variant == 'kuzushiji':
         (X_train, y_train), (X_test, y_test) = load_kuzushiji_mnist()
+    elif variant.startswith("emnist-"):
+        split = variant.split("-")[1]
+        if split not in [
+                'digits', 'letters',
+                'balanced', 'byclass',
+                'bymerge', 'mnist'
+        ]:
+            raise ValueError(
+                "To load EMNIST use the format "
+                "'emnist-split' where 'split' can be"
+                "'digits', 'letters', 'balanced' "
+                "'byclass', 'bymerge' and 'mnist'."
+            )
+        else:
+            (X_train, y_train), (X_test, y_test) = load_emnist(split=split)
     else:
-        raise ValueError("Variant must be one of: 'mnist', 'fashion', 'kuzushiji'")
-    X_train = X_train.reshape(60000, 784)
-    X_test = X_test.reshape(10000, 784)
+        raise ValueError(
+            "Variant must be one of: "
+            "'mnist', 'fashion', 'kuzushiji' "
+            "'emnist-digits', 'emnist-letters' "
+            "'emnist-balanced', 'emnist-byclass' "
+            "'emnist-bymerge', 'emnist-mnist'."
+        )
+    n_train = X_train.shape[0]
+    n_test = X_test.shape[0]
+    n_classes = len(np.unique(y_train))
+    X_train = X_train.reshape(n_train, 784)
+    X_test = X_test.reshape(n_test, 784)
     X_train = X_train.astype("float32")
     X_test = X_test.astype("float32")
     X_train /= 255.0
@@ -40,8 +67,8 @@ def mnist(variant='mnist', shuffle=True):
         train_data = list(zip(X_train, y_train))
         random.shuffle(train_data)
         X_train, y_train = unzip(train_data)
-    y_train = to_categorical(y_train, n_classes=10)
-    y_test = to_categorical(y_test, n_classes=10)
+    y_train = to_categorical(y_train, n_classes=n_classes)
+    y_test = to_categorical(y_test, n_classes=n_classes)
     return (X_train, y_train), (X_test, y_test)
 
 
@@ -97,3 +124,21 @@ def load_kuzushiji_mnist(
     test_images = np.load(test_img_path)['arr_0']
     test_labels = np.load(test_label_path)['arr_0']
     return (train_images, train_labels), (test_images, test_labels)
+
+
+def load_emnist(path="matlab.zip", split='digits'):
+    emnist_path = get_file(path, origin=EMNIST_URL)
+    with zipfile.ZipFile(emnist_path, 'r') as archive:
+        with archive.open(f"matlab/emnist-{split}.mat") as matfile:
+            emnist_mat = loadmat(matfile)
+            X_train = emnist_mat["dataset"][0][0][0][0][0][0]
+            y_train = emnist_mat["dataset"][0][0][0][0][0][1]
+            X_test = emnist_mat["dataset"][0][0][1][0][0][0]
+            y_test = emnist_mat["dataset"][0][0][1][0][0][1]
+            y_train = y_train.squeeze()
+            y_test = y_test.squeeze()
+            # For some reason in this data set the labels start from 1
+            if split == "letters":
+                y_train -= 1
+                y_test -= 1
+    return (X_train, y_train), (X_test, y_test)
