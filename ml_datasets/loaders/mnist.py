@@ -40,8 +40,8 @@ def mnist(variant='mnist', shuffle=True):
         ]:
             raise ValueError(
                 "To load EMNIST use the format "
-                "'emnist-split' where 'split' can be"
-                "'digits', 'letters', 'balanced' "
+                "'emnist-split' where 'split' can be "
+                "'digits', 'letters', 'balanced', "
                 "'byclass', 'bymerge' and 'mnist'."
             )
         else:
