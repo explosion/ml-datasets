@@ -18,31 +18,38 @@ FA_TEST_IMG_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t1
 FA_TEST_LBL_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/t10k-labels-idx1-ubyte.gz"
 
 KU_TRAIN_IMG_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-train-imgs.npz"
-KU_TRAIN_LBL_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-train-labels.npz"
+KU_TRAIN_LBL_URL = (
+    "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-train-labels.npz"
+)
 KU_TEST_IMG_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-test-imgs.npz"
 KU_TEST_LBL_URL = "http://codh.rois.ac.jp/kmnist/dataset/kmnist/kmnist-test-labels.npz"
 
 
 @register_loader("mnist")
-def mnist(variant='mnist', shuffle=True):
-    if variant == 'mnist':
+def mnist(variant="mnist", shuffle=True):
+    if variant == "mnist":
         (X_train, y_train), (X_test, y_test) = load_mnist()
-    elif variant == 'fashion':
+    elif variant == "fashion":
         (X_train, y_train), (X_test, y_test) = load_fashion_mnist()
-    elif variant == 'kuzushiji':
+    elif variant == "kuzushiji":
         (X_train, y_train), (X_test, y_test) = load_kuzushiji_mnist()
     elif variant.startswith("emnist-"):
         if len(variant.split("-")) != 2:
-            raise ValueError("EMNIST data set should be give in format "
-                             "'emnist-subset', where 'subset' can be "
-                             "'digits', 'letters', 'balanced' "
-                             "'byclass', 'bymerge' and 'mnist'. "
-                             f"{variant} was provided.")
+            raise ValueError(
+                "EMNIST data set should be give in format "
+                "'emnist-subset', where 'subset' can be "
+                "'digits', 'letters', 'balanced' "
+                "'byclass', 'bymerge' and 'mnist'. "
+                f"{variant} was provided."
+            )
         subset = variant.split("-")[1]
         if subset not in [
-                'digits', 'letters',
-                'balanced', 'byclass',
-                'bymerge', 'mnist'
+            "digits",
+            "letters",
+            "balanced",
+            "byclass",
+            "bymerge",
+            "mnist",
         ]:
             raise ValueError(
                 "To load EMNIST use the format "
@@ -125,10 +132,10 @@ def load_kuzushiji_mnist(
     train_label_path = get_file(train_label_path, origin=KU_TRAIN_LBL_URL)
     test_img_path = get_file(test_img_path, origin=KU_TEST_IMG_URL)
     test_label_path = get_file(test_label_path, origin=KU_TEST_LBL_URL)
-    train_images = np.load(train_img_path)['arr_0']
-    train_labels = np.load(train_label_path)['arr_0']
-    test_images = np.load(test_img_path)['arr_0']
-    test_labels = np.load(test_label_path)['arr_0']
+    train_images = np.load(train_img_path)["arr_0"]
+    train_labels = np.load(train_label_path)["arr_0"]
+    test_images = np.load(test_img_path)["arr_0"]
+    test_labels = np.load(test_label_path)["arr_0"]
     return (train_images, train_labels), (test_images, test_labels)
 
 
@@ -137,10 +144,10 @@ def _decode_idx(archive, path):
     data = bytes(gzip.decompress(comp))
     axes = data[3]
     shape = []
-    dtype = np.dtype('ubyte').newbyteorder('>')
+    dtype = np.dtype("ubyte").newbyteorder(">")
     for axis in range(axes):
         offset = 4 * (axis + 1)
-        size = int(np.frombuffer(data[offset:offset + 4], dtype='>u4'))
+        size = int(np.frombuffer(data[offset : offset + 4], dtype=">u4"))
         shape.append(size)
     shape = tuple(shape)
     offset = 4 * (axes + 1)
@@ -149,19 +156,19 @@ def _decode_idx(archive, path):
     return reshaped
 
 
-def load_emnist(path=EMNIST_FILE, subset='digits'):
+def load_emnist(path=EMNIST_FILE, subset="digits"):
     emnist_path = get_file(path, origin=EMNIST_URL)
-    train_X_path = f'gzip/emnist-{subset}-train-images-idx3-ubyte.gz'
-    train_y_path = f'gzip/emnist-{subset}-train-labels-idx1-ubyte.gz'
-    test_X_path = f'gzip/emnist-{subset}-test-images-idx3-ubyte.gz'
-    test_y_path = f'gzip/emnist-{subset}-test-labels-idx1-ubyte.gz'
-    with zipfile.ZipFile(emnist_path, 'r') as archive:
+    train_X_path = f"gzip/emnist-{subset}-train-images-idx3-ubyte.gz"
+    train_y_path = f"gzip/emnist-{subset}-train-labels-idx1-ubyte.gz"
+    test_X_path = f"gzip/emnist-{subset}-test-images-idx3-ubyte.gz"
+    test_y_path = f"gzip/emnist-{subset}-test-labels-idx1-ubyte.gz"
+    with zipfile.ZipFile(emnist_path, "r") as archive:
         train_X = _decode_idx(archive, train_X_path)
         train_y = _decode_idx(archive, train_y_path)
         test_X = _decode_idx(archive, test_X_path)
         test_y = _decode_idx(archive, test_y_path)
         # For some reason in this data set the labels start from 1
-        if subset == 'letters':
+        if subset == "letters":
             train_y = train_y - 1
             test_y = test_y - 1
     return (train_X, train_y), (test_X, test_y)
