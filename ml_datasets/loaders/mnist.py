@@ -10,6 +10,7 @@ from .._registry import register_loader
 
 MNIST_URL = "https://s3.amazonaws.com/img-datasets/mnist.pkl.gz"
 EMNIST_URL = "http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
+EMNIST_FILE = "gzip.zip"
 
 FA_TRAIN_IMG_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz"
 FA_TRAIN_LBL_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz"
@@ -31,7 +32,7 @@ def mnist(variant='mnist', shuffle=True):
     elif variant == 'kuzushiji':
         (X_train, y_train), (X_test, y_test) = load_kuzushiji_mnist()
     elif variant.startswith("emnist-"):
-        if variant.split('-') != 2:
+        if len(variant.split("-")) != 2:
             raise ValueError("EMNIST data set should be give in format "
                              "'emnist-subset', where 'subset' can be "
                              "'digits', 'letters', 'balanced' "
@@ -148,7 +149,7 @@ def _decode_idx(archive, path):
     return reshaped
 
 
-def load_emnist(path="gzip.zip", subset='digits'):
+def load_emnist(path=EMNIST_FILE, subset='digits'):
     emnist_path = get_file(path, origin=EMNIST_URL)
     train_X_path = f'gzip/emnist-{subset}-train-images-idx3-ubyte.gz'
     train_y_path = f'gzip/emnist-{subset}-train-labels-idx1-ubyte.gz'
