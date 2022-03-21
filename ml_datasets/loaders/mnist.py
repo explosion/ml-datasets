@@ -54,9 +54,9 @@ def mnist(variant='mnist', shuffle=True):
     else:
         raise ValueError(
             "Variant must be one of: "
-            "'mnist', 'fashion', 'kuzushiji' "
-            "'emnist-digits', 'emnist-letters' "
-            "'emnist-balanced', 'emnist-byclass' "
+            "'mnist', 'fashion', 'kuzushiji', "
+            "'emnist-digits', 'emnist-letters', "
+            "'emnist-balanced', 'emnist-byclass', "
             "'emnist-bymerge', 'emnist-mnist'."
         )
     n_train = X_train.shape[0]
