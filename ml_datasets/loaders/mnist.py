@@ -2,7 +2,6 @@ import random
 import zipfile
 import gzip
 import numpy as np
-from scipy.io import loadmat
 from srsly import cloudpickle as pickle
 
 from ..util import unzip, to_categorical, get_file
@@ -10,7 +9,7 @@ from .._registry import register_loader
 
 
 MNIST_URL = "https://s3.amazonaws.com/img-datasets/mnist.pkl.gz"
-EMNIST_URL = "http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/matlab.zip"
+EMNIST_URL = "http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip"
 
 FA_TRAIN_IMG_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-images-idx3-ubyte.gz"
 FA_TRAIN_LBL_URL = "http://fashion-mnist.s3-website.eu-central-1.amazonaws.com/train-labels-idx1-ubyte.gz"
@@ -32,20 +31,20 @@ def mnist(variant='mnist', shuffle=True):
     elif variant == 'kuzushiji':
         (X_train, y_train), (X_test, y_test) = load_kuzushiji_mnist()
     elif variant.startswith("emnist-"):
-        split = variant.split("-")[1]
-        if split not in [
+        subset = variant.split("-")[1]
+        if subset not in [
                 'digits', 'letters',
                 'balanced', 'byclass',
                 'bymerge', 'mnist'
         ]:
             raise ValueError(
                 "To load EMNIST use the format "
-                "'emnist-split' where 'split' can be"
+                "'emnist-subset' where 'subset' can be"
                 "'digits', 'letters', 'balanced' "
                 "'byclass', 'bymerge' and 'mnist'."
             )
         else:
-            (X_train, y_train), (X_test, y_test) = load_emnist(split=split)
+            (X_train, y_train), (X_test, y_test) = load_emnist(subset=subset)
     else:
         raise ValueError(
             "Variant must be one of: "
@@ -126,19 +125,36 @@ def load_kuzushiji_mnist(
     return (train_images, train_labels), (test_images, test_labels)
 
 
-def load_emnist(path="matlab.zip", split='digits'):
+def _decode_idx(archive, path):
+    comp = archive.read(path)
+    data = bytes(gzip.decompress(comp))
+    axes = data[3]
+    shape = []
+    dtype = np.dtype('ubyte').newbyteorder('>')
+    for axis in range(axes):
+        offset = 4 * (axis + 1)
+        size = int(np.frombuffer(data[offset:offset + 4], dtype='>u4'))
+        shape.append(size)
+    shape = tuple(shape)
+    offset = 4 * (axes + 1)
+    flat = np.frombuffer(data[offset:], dtype=dtype)
+    reshaped = flat.reshape(shape)
+    return reshaped
+
+
+def load_emnist(path="gzip.zip", subset='digits'):
     emnist_path = get_file(path, origin=EMNIST_URL)
+    train_X_path = f'gzip/emnist-{subset}-train-images-idx3-ubyte.gz'
+    train_y_path = f'gzip/emnist-{subset}-train-labels-idx1-ubyte.gz'
+    test_X_path = f'gzip/emnist-{subset}-test-images-idx3-ubyte.gz'
+    test_y_path = f'gzip/emnist-{subset}-test-labels-idx1-ubyte.gz'
     with zipfile.ZipFile(emnist_path, 'r') as archive:
-        with archive.open(f"matlab/emnist-{split}.mat") as matfile:
-            emnist_mat = loadmat(matfile)
-            X_train = emnist_mat["dataset"][0][0][0][0][0][0]
-            y_train = emnist_mat["dataset"][0][0][0][0][0][1]
-            X_test = emnist_mat["dataset"][0][0][1][0][0][0]
-            y_test = emnist_mat["dataset"][0][0][1][0][0][1]
-            y_train = y_train.squeeze()
-            y_test = y_test.squeeze()
-            # For some reason in this data set the labels start from 1
-            if split == "letters":
-                y_train -= 1
-                y_test -= 1
-    return (X_train, y_train), (X_test, y_test)
+        train_X = _decode_idx(archive, train_X_path)
+        train_y = _decode_idx(archive, train_y_path)
+        test_X = _decode_idx(archive, test_X_path)
+        test_y = _decode_idx(archive, test_y_path)
+        # For some reason in this data set the labels start from 1
+        if subset == 'letters':
+            train_y = train_y - 1
+            test_y = test_y - 1
+    return (train_X, train_y), (test_X, test_y)
