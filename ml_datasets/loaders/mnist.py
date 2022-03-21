@@ -31,6 +31,12 @@ def mnist(variant='mnist', shuffle=True):
     elif variant == 'kuzushiji':
         (X_train, y_train), (X_test, y_test) = load_kuzushiji_mnist()
     elif variant.startswith("emnist-"):
+        if variant.split('-') != 2:
+            raise ValueError("EMNIST data set should be give in format "
+                             "'emnist-subset', where 'subset' can be "
+                             "'digits', 'letters', 'balanced' "
+                             "'byclass', 'bymerge' and 'mnist'. "
+                             f"{variant} was provided.")
         subset = variant.split("-")[1]
         if subset not in [
                 'digits', 'letters',
