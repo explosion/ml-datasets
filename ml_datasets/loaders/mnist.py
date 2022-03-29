@@ -36,7 +36,7 @@ def mnist(variant="mnist", shuffle=True):
     elif variant.startswith("emnist-"):
         if len(variant.split("-")) != 2:
             raise ValueError(
-                "EMNIST data set should be give in format "
+                "EMNIST data set should be given in format "
                 "'emnist-subset', where 'subset' can be "
                 "'digits', 'letters', 'balanced' "
                 "'byclass', 'bymerge' and 'mnist'. "
