@@ -1,3 +1,4 @@
+from .cifar import cifar
 from .cmu import cmu
 from .dbpedia import dbpedia
 from .imdb import imdb

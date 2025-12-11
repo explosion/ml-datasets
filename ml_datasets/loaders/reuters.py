@@ -4,8 +4,8 @@ import numpy
 from ..util import get_file
 from .._registry import register_loader
 
-
-URL = "https://s3.amazonaws.com/text-datasets/reuters_word_index.pkl"
+URL = "https://s3.amazonaws.com/text-datasets/reuters.pkl"
+WORD_INDEX_URL = "https://s3.amazonaws.com/text-datasets/reuters_word_index.pkl"
 
 
 @register_loader("reuters")
@@ -15,7 +15,7 @@ def reuters():
 
 
 def get_word_index(path="reuters_word_index.pkl"):
-    path = get_file(path, origin=URL)
+    path = get_file(path, origin=WORD_INDEX_URL)
     f = open(path, "rb")
     data = pickle.load(f, encoding="latin1")
     f.close()
@@ -60,7 +60,7 @@ def load_reuters(
     # https://raw.githubusercontent.com/fchollet/keras/master/keras/datasets/mnist.py
     # Copyright Francois Chollet, Google, others (2015)
     # Under MIT license
-    path = get_file(path, origin="https://s3.amazonaws.com/text-datasets/reuters.pkl")
+    path = get_file(path, origin=URL)
     f = open(path, "rb")
     X, labels = pickle.load(f)
     f.close()
