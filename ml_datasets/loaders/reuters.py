@@ -1,4 +1,4 @@
-from srsly import cloudpickle as pickle
+import cloudpickle as pickle
 import numpy
 
 from ..util import get_file

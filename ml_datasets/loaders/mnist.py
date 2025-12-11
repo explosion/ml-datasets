@@ -1,8 +1,9 @@
 import random
 import zipfile
 import gzip
+
+import cloudpickle as pickle
 import numpy as np
-from srsly import cloudpickle as pickle
 
 from ..util import unzip, to_categorical, get_file
 from .._registry import register_loader
