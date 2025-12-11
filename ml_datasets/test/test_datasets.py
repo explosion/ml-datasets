@@ -1,3 +1,5 @@
+import platform
+
 import pytest
 import numpy as np
 
@@ -59,6 +61,7 @@ def test_reuters():
     # TODO test output contents
 
 
+@pytest.mark.xfail(platform.system() == "Windows", reason="path issues")
 def test_snli():
     train, dev = ml_datasets.snli()
     # TODO test output contents

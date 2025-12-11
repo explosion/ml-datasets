@@ -19,18 +19,30 @@ defaults:
 
 jobs:
   test:
-    name: Python ${{ matrix.python-version }} NumPy ${{ matrix.numpy-version}}
-    runs-on: ubuntu-latest
+    name: ${{ matrix.os }} Python ${{ matrix.python-version }} NumPy ${{ matrix.numpy-version}}
+    runs-on: ${{ matrix.os}}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         python-version: ["3.11", "3.14"]
         numpy-version: ["2.3.0", latest]
         include:
-          - python-version: "3.8"
+          # Test oldest supported Python and NumPy versions
+          - os: ubuntu-latest
+            python-version: "3.8"
             numpy-version: "1.18.0"
-          - python-version: "3.14"
+          # Test vs. NumPy nightly wheels
+          - os: ubuntu-latest
+            python-version: "3.14"
             numpy-version: "nightly"
+          # Test issues re. preinstalled SSL certificates on different OSes
+          - os: windows-latest
+            python-version: "3.14"
+            numpy-version: latest
+          - os: macos-latest
+            python-version: "3.14"
+            numpy-version: latest
 
     steps:
       - name: Checkout
