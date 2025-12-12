@@ -1,0 +1,9 @@
+[tool.pytest.ini_options]
+addopts = "--strict-markers --strict-config -v -r sxfE --color=yes --durations=10"
+xfail_strict = true
+filterwarnings = [
+    "error",
+    # FIXME spurious random download warnings; will cause trouble in downstream CI
+    "ignore:Implicitly cleaning up <HTTPError 403:ResourceWarning",
+    "ignore:unclosed <socket.socket:ResourceWarning",
+]

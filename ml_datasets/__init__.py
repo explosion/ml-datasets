@@ -8,3 +8,5 @@ from .loaders.stack_exchange import stack_exchange
 from .loaders.universal_dependencies import ud_ancora_pos_tags, ud_ewtb_pos_tags
 from .loaders.dbpedia import dbpedia
 from .loaders.cmu import cmu
+from .loaders.cifar import cifar
+from .loaders.wikiner import wikiner
