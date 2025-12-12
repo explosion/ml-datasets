@@ -4,7 +4,9 @@ from ml_datasets.util import get_file
 
 
 def test_get_file_domain_resolution_fails():
-    with pytest.raises(URLError, match="test_non_existent_file.*Name or service not known"):
+    with pytest.raises(
+        URLError, match=r"test_non_existent_file.*(not known|getaddrinfo failed)"
+    ):
         get_file(
             "non_existent_file.txt",
             "http://test_notexist.wth/test_non_existent_file.txt"
