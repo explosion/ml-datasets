@@ -37,15 +37,20 @@ def get_file(fname, origin, untar=False, unzip=False, cache_subdir="datasets"):
         else:
             progbar.update(block_size)
 
-    error_msg = "URL fetch failure on {}: {} -- {}"
     if not os.path.exists(fpath):
         try:
             try:
                 urlretrieve(origin, fpath, dl_progress)
-            except URLError as e:
-                raise Exception(error_msg.format(origin, e.errno, e.reason))
+            # Enrich download exceptions with full file name
+            # HTTPError is a subclass of URLError, so it must be caught first
             except HTTPError as e:
-                raise Exception(error_msg.format(origin, e.code, e.msg))
+                error_msg = "URL fetch failure on {} : {} -- {}"
+                e.msg = error_msg.format(origin, e.code, e.msg)
+                raise
+            except URLError as e:
+                error_msg = "URL fetch failure on {} -- {}"
+                e.reason = error_msg.format(origin, e.reason)
+                raise
         except (Exception, KeyboardInterrupt):
             if os.path.exists(fpath):
                 os.remove(fpath)
