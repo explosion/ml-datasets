@@ -8,6 +8,8 @@ on:
     types:
       - published
 
+permissions: {}
+
 jobs:
   upload_pypi:
     runs-on: ubuntu-latest
@@ -19,7 +21,7 @@ jobs:
       contents: read
     if: github.event_name == 'release' && github.event.action == 'published'
     steps:
-      - uses: robinraju/release-downloader@v1
+      - uses: robinraju/release-downloader@daf26c55d821e836577a15f77d86ddc078948b05  # v1
         with:
           tag: ${{ github.event.release.tag_name }}
           fileName: '*'
