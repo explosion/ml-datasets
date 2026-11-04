@@ -1,12 +1,12 @@
 from functools import partial
-from typing import Iterable, Callable, Dict
+from typing import Iterable, Callable, Dict, Optional
 from pathlib import Path
 
 from .loaders import cmu, dbpedia, imdb
 
 
 def cmu_reader(
-    path: Path = None, *, freq_cutoff: int = 0, limit: int = 0, split=0.9
+    path: Optional[Path] = None, *, freq_cutoff: int = 0, limit: int = 0, split=0.9
 ) -> Dict[str, Callable[["Language"], Iterable["Example"]]]:
     from spacy.training.example import Example
 
@@ -36,7 +36,7 @@ def cmu_reader(
 
 
 def dbpedia_reader(
-    path: Path = None, *, train_limit: int = 0, dev_limit: int = 0
+    path: Optional[Path] = None, *, train_limit: int = 0, dev_limit: int = 0
 ) -> Dict[str, Callable[["Language"], Iterable["Example"]]]:
     from spacy.training.example import Example
 
@@ -60,7 +60,7 @@ def dbpedia_reader(
 
 
 def imdb_reader(
-    path: Path = None, *, train_limit: int = 0, dev_limit: int = 0
+    path: Optional[Path] = None, *, train_limit: int = 0, dev_limit: int = 0
 ) -> Dict[str, Callable[["Language"], Iterable["Example"]]]:
     from spacy.training.example import Example
 
