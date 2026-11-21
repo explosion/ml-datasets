@@ -1,7 +1,9 @@
 # TODO the tests below only verify that the various functions don't crash.
 # Expand them to test the actual output contents.
 
+import functools
 import platform
+from urllib.error import HTTPError, URLError
 
 import pytest
 import numpy as np
@@ -24,58 +26,89 @@ else:
     np_24_deprecation = lambda x: x
 
 
+def skip_if_unreachable(test):
+    """Skip a test when its download host can't be reached (connection
+    refused, timed out, DNS failure), so third-party outages don't fail CI.
+    HTTP errors still fail, as they usually mean a dataset has moved."""
+
+    @functools.wraps(test)
+    def wrapper(*args, **kwargs):
+        try:
+            return test(*args, **kwargs)
+        except HTTPError:
+            raise
+        except URLError as e:
+            pytest.skip(f"download host unreachable: {e.reason}")
+        except (ConnectionError, TimeoutError) as e:
+            pytest.skip(f"download host unreachable: {e!r}")
+
+    return wrapper
+
+
 @np_24_deprecation
+@skip_if_unreachable
 def test_cifar():
     (X_train, y_train), (X_test, y_test) = ml_datasets.cifar()
 
 
 @pytest.mark.skip(reason="very slow download")
+@skip_if_unreachable
 def test_cmu():
     train, dev = ml_datasets.cmu()
 
 
+@skip_if_unreachable
 def test_dbpedia():
     train, dev = ml_datasets.dbpedia()
 
 
+@skip_if_unreachable
 def test_imdb():
     train, dev = ml_datasets.imdb()
 
 
 @np_24_deprecation
+@skip_if_unreachable
 def test_mnist():
     (X_train, y_train), (X_test, y_test) = ml_datasets.mnist()
 
 
 @pytest.mark.xfail(reason="403 Forbidden")
+@skip_if_unreachable
 def test_quora_questions():
     train, dev = ml_datasets.quora_questions()
 
 
 @np_24_deprecation
+@skip_if_unreachable
 def test_reuters():
     (X_train, y_train), (X_test, y_test) = ml_datasets.reuters()
 
 
 @pytest.mark.xfail(platform.system() == "Windows", reason="path issues")
+@skip_if_unreachable
 def test_snli():
     train, dev = ml_datasets.snli()
 
 
 @pytest.mark.xfail(reason="no default path")
+@skip_if_unreachable
 def test_stack_exchange():
     train, dev = ml_datasets.stack_exchange()
 
 
+@skip_if_unreachable
 def test_ud_ancora_pos_tags():
     (train_X, train_y), (dev_X, dev_y) = ml_datasets.ud_ancora_pos_tags()
 
 
 @pytest.mark.xfail(reason="str column where int expected")
+@skip_if_unreachable
 def test_ud_ewtb_pos_tags():
     (train_X, train_y), (dev_X, dev_y) = ml_datasets.ud_ewtb_pos_tags()
 
 
 @pytest.mark.xfail(reason="no default path")
+@skip_if_unreachable
 def test_wikiner():
     train, dev = ml_datasets.wikiner()
