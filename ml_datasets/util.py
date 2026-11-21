@@ -13,7 +13,7 @@ def safe_extract_tar(tfile, path):
     written outside of it.
 
     Uses the "data" extraction filter where Python supports it (3.12+ and
-    the security backports in 3.8.17+, 3.9.17+, 3.10.12+ and 3.11.4+), which
+    the security backports in 3.10.12+ and 3.11.4+), which
     also avoids the DeprecationWarning that `extractall()` without a filter
     raises on Python 3.12+. On Pythons without extraction filters, links and
     special files are refused, and so are paths that leave `path`.
