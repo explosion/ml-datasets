@@ -30,8 +30,10 @@ jobs:
         python-version: ["3.11", "3.14"]
         numpy-version: ["2.3.0", latest]
         include:
-          # Test oldest supported Python and NumPy versions
-          - os: ubuntu-latest
+          # Test oldest supported Python and NumPy versions. Python 3.8 builds
+          # are not available for Ubuntu 26.04 (ubuntu-latest), so pin the
+          # runner image.
+          - os: ubuntu-24.04
             python-version: "3.8"
             numpy-version: "1.18.0"
           # Test vs. NumPy nightly wheels
